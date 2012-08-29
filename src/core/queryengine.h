@@ -1,0 +1,5 @@
+
+class QueryEngine{
+public:
+    QueryEngine();
+};

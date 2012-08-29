@@ -1,0 +1,108 @@
+# This is the makefile used to build daedalus
+# tested on Win7 using the gcc compiler.
+
+
+BOOST=c:/code/boost
+HDRS = -I./others -I./exec -I./core -I./log -I./readers -I./kernel -I./model -I../lib
+CXXFLAGS =	-O2 -g  -fmessage-length=0 -w -Wno-write-strings $(HDRS) -I$(BOOST) -DDLIB_NO_GUI_SUPPORT -DDEBUG 
+# These are the link time flags passed to gcc
+LFLAGS = -lpthread 
+
+LIBS =
+
+# this is the name of the output executable
+TARGET = Daedalus.exe
+VPATH = core model exec log kernel readers others
+
+# dlib source
+SRCS = ../lib/dlib/all/source.cpp 
+
+OBJS =	Daedalus.o	
+OBJS += vectorops.o				
+OBJS += performancemonitor.o
+OBJS += faultsite.o 
+OBJS += cell.o
+OBJS += probabilityextension.o
+OBJS += circuitdb.o
+OBJS += queryengine.o
+OBJS += circuitgraph.o
+OBJS += reader.o
+OBJS += simulationmodule.o
+OBJS += configuration.o
+OBJS += formalmodule.o
+OBJS += gate.o
+OBJS += standardcelllibrary.o
+OBJS += staticanalyzemodule.o
+OBJS += graph.o
+OBJS += statisticsmodule.o	
+OBJS += layoutextension.o	
+OBJS += kernel.o
+OBJS += timingextension.o
+OBJS += readeradapter.o
+OBJS += core.o
+OBJS += reportwriter.o
+OBJS += defreader.o
+OBJS += signalprobabilitydb.o
+OBJS += executionfacade.o
+OBJS += synthesizemodule.o
+OBJS += parasitic.o
+OBJS += argumenthandler.o
+OBJS += graphengine.o
+OBJS += stdoutputwriter.o
+OBJS += io.o
+OBJS += utils.o
+OBJS += libertyreader.o	
+OBJS += vcdreader.o
+OBJS += loggingservices.o
+OBJS += verilogreader.o	
+OBJS += wire.o	
+OBJS += messagingservices.o
+OBJS += writer.o	
+OBJS += module.o
+OBJS += xmlreader.o	
+OBJS += moduleinstancemanager.o	
+OBJS += xmlwriter.o	
+OBJS += object.o
+
+
+
+TMPS = $(SRCS:.cpp=.o)
+OBJS += $(TMPS:.c=.o)
+
+
+$(TARGET):	$(OBJS)
+	@echo Linking $@
+	$(CXX) -o $(TARGET) $(OBJS) $(LIBS)  $(HDRS) $(LFLAGS)
+	@echo Build Complete	
+
+all:	$(TARGET)
+
+clean:
+	rm -f $(OBJS) $(TARGET)
+	@echo All object files and binaries removed
+
+# Lion's make system does not need this.
+#.cpp.o: $<
+#	@echo Compiling $<
+#	@$(CC) -c $(CFLAGS) $< -o $@
+
+dep: 
+	@echo Running makedepend
+	@makedepend -- $(CFLAGS) -- $(SRC) 2> /dev/null 
+	@echo Completed makedepend
+
+	
+bison: parser.yy
+#	bison -d parser.yy
+
+flex: tokenizer.l
+#	flex tokenizer.l
+
+sim:
+	$(CC) $(CFLAGS) ScriptGenerator.cpp -o ScriptGenerator.exe -I$(BOOST)
+
+analysis:
+	$(CC) $(CFLAGS) ResultAnalysis.cpp -o ResultAnalysis.exe -I$(BOOST)
+
+
+	

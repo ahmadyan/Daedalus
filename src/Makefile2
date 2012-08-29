@@ -1,0 +1,23 @@
+# DSL-Analytic Makefile version 0.0.2
+CC=llvm-g++ 
+CFLAGS=-O2 -w -Wno-write-strings
+#BOOST=C:/gcc/boost_1_41_0
+BOOST=/opt/local/var/macports/software/boost/1.44.0_0/opt/local/include/
+SRC=main.cpp 
+OUT=-o Daedalus.exe
+all: main
+
+main: $(SRC)
+	$(CC)  $(OUT) $(CFLAGS) $(SRC)  -I$(BOOST)
+
+bison: parser.yy
+#	bison -d parser.yy
+
+flex: tokenizer.l
+#	flex tokenizer.l
+
+sim:
+	$(CC) $(CFLAGS) ScriptGenerator.cpp -o ScriptGenerator.exe -I$(BOOST)
+
+analysis:
+	$(CC) $(CFLAGS) ResultAnalysis.cpp -o ResultAnalysis.exe -I$(BOOST)
